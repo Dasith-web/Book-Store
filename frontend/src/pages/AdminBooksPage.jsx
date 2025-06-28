@@ -8,6 +8,7 @@ import {
 import BookTable from "../components/BookTable";
 import BookFormModal from "../components/BookFormModal";
 import Loader from "../components/Loader";
+import { motion } from "framer-motion";
 
 export default function AdminBooksPage() {
   const [books, setBooks] = useState([]);
@@ -45,7 +46,7 @@ export default function AdminBooksPage() {
   };
 
   const handleDelete = async (id) => {
-    if (confirm("Delete this book?")) {
+    if (confirm("Are you sure you want to delete this book?")) {
       await deleteBook(id);
       loadBooks();
     }
@@ -54,32 +55,49 @@ export default function AdminBooksPage() {
   if (loading) return <Loader />;
 
   return (
-    <div className="p-6 space-y-6">
-      <header className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Books</h1>
-        <button
-          onClick={handleAdd}
-          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-        >
-          + Add Book
-        </button>
-      </header>
+    <div className="min-h-screen bg-gray-50 p-6">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="max-w-7xl mx-auto"
+      >
+        <header className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-800">Book Inventory</h1>
+            <p className="text-gray-600">Manage your bookstore collection</p>
+          </div>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleAdd}
+            className="bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition-all flex items-center gap-2"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+            </svg>
+            Add Book
+          </motion.button>
+        </header>
 
-      <BookTable
-        books={books}
-        onEdit={(b) => {
-          setEditingBook(b);
-          setModalOpen(true);
-        }}
-        onDelete={handleDelete}
-      />
+        <div className="bg-white rounded-xl shadow-md overflow-hidden">
+          <BookTable
+            books={books}
+            onEdit={(b) => {
+              setEditingBook(b);
+              setModalOpen(true);
+            }}
+            onDelete={handleDelete}
+          />
+        </div>
 
-      <BookFormModal
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
-        initialData={editingBook}
-        onSave={handleSave}
-      />
+        <BookFormModal
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
+          initialData={editingBook}
+          onSave={handleSave}
+        />
+      </motion.div>
     </div>
   );
 }
