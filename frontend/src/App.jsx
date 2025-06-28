@@ -5,6 +5,7 @@ import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import UserDashboard from "./pages/UserDashboard.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
+import AdminBooksPage from "./pages/AdminBooksPage.jsx"; // admin books management page
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 export default function App() {
@@ -12,22 +13,26 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route index element={<Navigate to="/login" replace />} />
+          {/* Redirect root to login */}
+          <Route path="/" element={<Navigate to="/login" replace />} />
+
+          {/* Public routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
-          {/* user pages */}
+          {/* Protected user routes */}
           <Route element={<ProtectedRoute />}>
             <Route path="/user/dashboard" element={<UserDashboard />} />
           </Route>
 
-          {/* admin‑only pages */}
+          {/* Protected admin-only routes */}
           <Route element={<ProtectedRoute roles={["admin"]} />}>
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="/admin/books" element={<AdminBooksPage />} />
           </Route>
 
-          {/* catch‑all */}
-          <Route path="*" element={<p className="p-8">404 – Not found</p>} />
+          {/* 404 fallback */}
+          <Route path="*" element={<p className="p-8 text-center">404 – Not Found</p>} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
