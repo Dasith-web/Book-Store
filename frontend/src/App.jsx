@@ -22,30 +22,31 @@ export default function App() {
       <CartProvider>
         <BrowserRouter>
           <Routes>
-            {/* ───────────────────────── Public store ───────────────────────── */}
-            <Route path="/" element={<ShopHome />} />
-            <Route path="/checkout" element={<CheckoutPage />} />
+            {/* ───────────────────── Default = /login ───────────────────── */}
+            <Route path="/" element={<Navigate to="/login" replace />} />
 
-            {/* ──────────────────────── Public auth pages ────────────────────── */}
+            {/* ───────────────────── Public auth pages ───────────────────── */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
 
-            {/* ────────────────────────── User‑only pages ────────────────────── */}
+            {/* ─────────────────────── Public store  ─────────────────────── */}
+            {/* Move storefront to /shop so we can guard / with redirect above */}
+            <Route path="/shop" element={<ShopHome />} />
+            <Route path="/checkout" element={<CheckoutPage />} />
+
+            {/* ─────────────────────── User‑only pages ───────────────────── */}
             <Route element={<ProtectedRoute />}>
               <Route path="/user/dashboard" element={<UserDashboard />} />
             </Route>
 
-            {/* ───────────────────────── Admin‑only pages ────────────────────── */}
+            {/* ────────────────────── Admin‑only pages ───────────────────── */}
             <Route element={<ProtectedRoute roles={["admin"]} />}>
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
               <Route path="/admin/books" element={<AdminBooksPage />} />
             </Route>
 
-            {/* ─────────────────────────── Fallback 404 ──────────────────────── */}
-            <Route
-              path="*"
-              element={<Navigate to="/" replace />}
-            />
+            {/* ────────────────────────── Fallback 404 ───────────────────── */}
+            <Route path="*" element={<Navigate to="/login" replace />} />
           </Routes>
         </BrowserRouter>
       </CartProvider>
