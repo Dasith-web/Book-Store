@@ -1,7 +1,16 @@
 import { motion } from "framer-motion";
 import { StarIcon } from "@heroicons/react/24/solid";
+import { useNavigate } from "react-router-dom";  // Add this import
 
 export default function BookCard({ book, onClick, onAddToCart }) {
+  const navigate = useNavigate();
+
+  const handleAddToCart = (e) => {
+    e.stopPropagation();
+    onAddToCart(book); // Pass the book to the parent handler
+    navigate('/cart'); // Navigate to cart page
+  };
+
   return (
     <motion.div 
       whileHover={{ y: -5 }}
@@ -39,10 +48,7 @@ export default function BookCard({ book, onClick, onAddToCart }) {
           id={`add-to-cart-${book._id}`}
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}
-          onClick={(e) => {
-            e.stopPropagation();
-            onAddToCart();
-          }}
+          onClick={handleAddToCart}  // Use the new handler
           className="w-full py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg shadow-sm hover:shadow-md transition-all"
         >
           Add to Cart

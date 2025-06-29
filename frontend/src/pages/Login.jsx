@@ -58,7 +58,7 @@ export default function Login() {
       const { data } = await api.post("/auth/login", { email, password });
       saveAuth(data);
       navigate(
-        data.user.role === "admin" ? "/admin/dashboard" : "/user/dashboard",
+        data.user.role === "admin" ? "/admin/dashboard" : "/",
         { replace: true }
       );
     } catch (err) {

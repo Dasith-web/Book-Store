@@ -14,6 +14,7 @@ export default function ShopHome() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { items, addToCart } = useCart();
+  const { add } = useCart();
 
   useEffect(() => {
     setIsLoading(true);
@@ -152,10 +153,12 @@ export default function ShopHome() {
                 layout
               >
                 <BookCard 
-                  book={book} 
-                  onClick={() => setSelected(book)}
-                  onAddToCart={() => handleAddToCart(book)}
-                />
+  book={book} 
+  onClick={() => setSelected(book)}
+  onAddToCart={(book) => {
+    add(book, 1); // Add the book to cart
+  }}
+/>
               </motion.div>
             ))}
           </AnimatePresence>
