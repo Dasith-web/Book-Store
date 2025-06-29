@@ -1,40 +1,54 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+
 import { AuthProvider } from "./context/AuthContext.jsx";
+import { CartProvider } from "./context/Cartcontext.jsx";
+
+import ShopHome from "./pages/ShopHome.jsx";
+import CheckoutPage from "./pages/CheckoutPage.jsx";
+
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
+
 import UserDashboard from "./pages/UserDashboard.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
-import AdminBooksPage from "./pages/AdminBooksPage.jsx"; // admin books management page
+import AdminBooksPage from "./pages/AdminBooksPage.jsx";
+
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 export default function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          {/* Redirect root to login */}
-          <Route path="/" element={<Navigate to="/login" replace />} />
+      <CartProvider>
+        <BrowserRouter>
+          <Routes>
+            {/* ───────────────────────── Public store ───────────────────────── */}
+            <Route path="/" element={<ShopHome />} />
+            <Route path="/checkout" element={<CheckoutPage />} />
 
-          {/* Public routes */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+            {/* ──────────────────────── Public auth pages ────────────────────── */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
-          {/* Protected user routes */}
-          <Route element={<ProtectedRoute />}>
-            <Route path="/user/dashboard" element={<UserDashboard />} />
-          </Route>
+            {/* ────────────────────────── User‑only pages ────────────────────── */}
+            <Route element={<ProtectedRoute />}>
+              <Route path="/user/dashboard" element={<UserDashboard />} />
+            </Route>
 
-          {/* Protected admin-only routes */}
-          <Route element={<ProtectedRoute roles={["admin"]} />}>
-            <Route path="/admin/dashboard" element={<AdminDashboard />} />
-            <Route path="/admin/books" element={<AdminBooksPage />} />
-          </Route>
+            {/* ───────────────────────── Admin‑only pages ────────────────────── */}
+            <Route element={<ProtectedRoute roles={["admin"]} />}>
+              <Route path="/admin/dashboard" element={<AdminDashboard />} />
+              <Route path="/admin/books" element={<AdminBooksPage />} />
+            </Route>
 
-          {/* 404 fallback */}
-          <Route path="*" element={<p className="p-8 text-center">404 – Not Found</p>} />
-        </Routes>
-      </BrowserRouter>
+            {/* ─────────────────────────── Fallback 404 ──────────────────────── */}
+            <Route
+              path="*"
+              element={<Navigate to="/" replace />}
+            />
+          </Routes>
+        </BrowserRouter>
+      </CartProvider>
     </AuthProvider>
   );
 }
